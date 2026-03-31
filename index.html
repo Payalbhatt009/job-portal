@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Job Portal</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-left: 5px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        li {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Job Finder</h1>
+<input type="text" id="searchInput" placeholder="Search job..." onkeyup="searchJob()">
+
+<input type="text" id="jobInput" placeholder="Enter job title">
+<button onclick="addJob()">Add Job</button>
+
+        <ul id="jobList"></ul>
+
+    <script>
+        let jobs = [];
+
+    function addJob() {
+        let input = document.getElementById("jobInput");
+        let job = input.value;
+
+        jobs.push(job);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+
+        showJobs();
+
+        input.value = "";
+    }
+
+    function showJobs() {
+        let list = document.getElementById("jobList");
+        list.innerHTML = "❌";
+
+        let savedJobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+        savedJobs.forEach((job, index) => {
+            let li = document.createElement("li");
+            li.textContent = job;
+
+            let btn = document.createElement("button");
+            btn.textContent = "";
+            btn.onclick = function() {
+                savedJobs.splice(index, 1);
+                localStorage.setItem("jobs", JSON.stringify(savedJobs));
+                showJobs();
+            };
+
+            li.appendChild(btn);
+            list.appendChild(li);
+        });
+    }
+
+    window.onload = showJobs;
+window.onload = showJobs;
+
+function searchJob() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let items = document.getElementById("jobList").getElementsByTagName("li");
+
+    for (let i = 0; i < items.length; i++) {
+        let text = items[i].textContent.toLowerCase();
+        if (text.includes(input)) {
+            items[i].style.display = "";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+ </script>
+
+</body>
+</html>
